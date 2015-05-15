@@ -196,7 +196,7 @@ class NewsSet(object):
         for a in self.articles:
             articles += a.to_xml()
         article_count = len(self.articles)
-        return News.XML_TEMPLATE.format(
+        return NewsSet.XML_TEMPLATE.format(
             to_user_name=to_user_name,
             from_user_name=from_user_name,
             create_time=self.create_time,
