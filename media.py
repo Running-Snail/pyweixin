@@ -1,13 +1,15 @@
 import time
 
 
-def __str_create_time(create_time=None):
-    if create_time is None:
-        create_time = int(time.time())
-    return str(create_time)
+class Media(object):
+    @staticmethod
+    def __str_create_time(create_time=None):
+        if create_time is None:
+            create_time = int(time.time())
+        return str(create_time)
 
 
-class Text(object):
+class Text(Media):
     XML_TEMPLATE = (
         u'<xml>'
         u'<ToUserName><![CDATA[{to_user_name}]]></ToUserName>'
@@ -20,7 +22,7 @@ class Text(object):
 
     def __init__(self, content, create_time=None):
         self.content = content
-        self.create_time = __str_create_time(create_time)
+        self.create_time = Media.__str_create_time(create_time)
 
     def to_xml(self, to_user_name, from_user_name):
         return Text.XML_TEMPLATE.format(
@@ -31,7 +33,7 @@ class Text(object):
         )
 
 
-class Image(object):
+class Image(Media):
     XML_TEMPLATE = (
         u'<xml>'
         u'<ToUserName><![CDATA[{to_user_name}]]></ToUserName>'
@@ -46,7 +48,7 @@ class Image(object):
 
     def __init__(self, media_id, create_time=None):
         self.media_id = media_id
-        self.create_time = __str_create_time(create_time)
+        self.create_time = Media.__str_create_time(create_time)
 
     def to_xml(self, to_user_name, from_user_name):
         return Image.XML_TEMPLATE.format(
@@ -57,7 +59,7 @@ class Image(object):
         )
 
 
-class Voice(object):
+class Voice(Media):
     XML_TEMPLATE = (
         u'<xml>'
         u'<ToUserName><![CDATA[{to_user_name}]]></ToUserName>'
@@ -72,7 +74,7 @@ class Voice(object):
 
     def __init__(self, media_id, create_time=None):
         self.media_id = media_id
-        self.create_time = __str_create_time(create_time)
+        self.create_time = Media.__str_create_time(create_time)
 
     def to_xml(self, to_user_name, from_user_name):
         return Voice.XML_TEMPLATE.format(
@@ -83,7 +85,7 @@ class Voice(object):
         )
 
 
-class Video(object):
+class Video(Media):
     XML_TEMPLATE = (
         u'<xml>'
         u'<ToUserName><![CDATA[{to_user_name}]]></ToUserName>'
@@ -102,7 +104,7 @@ class Video(object):
         self.media_id = media_id
         self.title = title
         self.description = description
-        self.create_time = __str_create_time(create_time)
+        self.create_time = Media.__str_create_time(create_time)
 
     def to_xml(self, to_user_name, from_user_name):
         return Video.XML_TEMPLATE.format(
@@ -115,7 +117,7 @@ class Video(object):
         )
 
 
-class Music(object):
+class Music(Media):
     XML_TEMPLATE = (
         u'<xml>'
         u'<ToUserName><![CDATA[{to_user_name}]]></ToUserName>'
@@ -139,7 +141,7 @@ class Music(object):
         self.description = description
         self.music_url = music_url
         self.hq_music_url = hq_music_url
-        self.create_time = __str_create_time(create_time)
+        self.create_time = Media.__str_create_time(create_time)
 
     def to_xml(self, to_user_name, from_user_name):
         return Music.XML_TEMPLATE.format(
@@ -154,7 +156,7 @@ class Music(object):
         )
 
 
-class News(object):
+class News(Media):
     XML_TEMPLATE = (
         u'<item>'
         u'<Title><![CDATA[{title}]]></Title>'
@@ -179,7 +181,7 @@ class News(object):
         )
 
 
-class NewsSet(object):
+class NewsSet(Media):
     XML_TEMPLATE = (
         u'<xml>'
         u'<ToUserName><![CDATA[{to_user_name}]]></ToUserName>'
@@ -195,7 +197,7 @@ class NewsSet(object):
 
     def __init__(self, articles, create_time=None):
         self.articles = articles
-        self.create_time = __str_create_time(create_time)
+        self.create_time = Media.__str_create_time(create_time)
 
     def to_xml(self, to_user_name, from_user_name):
         articles = ''
