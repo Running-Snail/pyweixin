@@ -11,4 +11,9 @@ class MsgHandleController(object):
         for h in self.handlers:
             if h.match(msg):
                 return h.handle(msg)
+            else:
+                try:
+                    return h.handle_not_match(msg)
+                except NotImplementedError:
+                    pass
         return False

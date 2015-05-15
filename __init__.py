@@ -1,5 +1,4 @@
 from weixin import Weixin
-import response
-from msgparser import MessageParser
+import media
 from msghandler import MsgHandler
 from msg_handle_controller import MsgHandleController

@@ -1,13 +1,22 @@
 import requests
-import urls
+import message
 import hashlib
+import urllib
+import helper
 import json
+import urls
 
 
 class Weixin(object):
     """\
         Weixin api class
     """
+    SNSAPI_BASE = 'snsapi_base'
+    SNSAPI_USERINFO = 'snsapi_userinfo'
+    AUTH_URL = ('https://open.weixin.qq.com/connect/oauth2/authorize?'
+                'appid={appid}&redirect_uri={redirect_uri}&response_type=code&'
+                'scope={scope}&state={state}#wechat_redirect')
+
     def __init__(self, app_id='', app_secret=''):
         super(Weixin, self).__init__()
         self.appid = app_id
@@ -118,4 +127,45 @@ class Weixin(object):
             urls.CREATE_MENU,
             access_token,
             json_config
+        )
+
+    def upload_temporary_media(self, access_token, filepath, media_type):
+        """\
+            upload temporary media
+        """
+        files = {'media': open(filepath, 'rb')}
+        params = {
+            'access_token': access_token,
+            'type': media_type
+        }
+        return requests.post(
+            urls.UPLOAD_TEMPORARY_MEDIA,
+            params=params,
+            files=files
+        ).json()
+
+    def get_temporary_media(self, access_token, media_id):
+        """\
+            get temporary media
+        """
+        params = {
+            'access_token': access_token,
+            'media_id': media_id
+        }
+        return requests.get(
+            urls.GET_TEMPORARY_MEDIA,
+            params=params
+        )
+
+    def parse_message(self, xml_string):
+        return message.Message(helper.xml2dict(xml_string))
+
+    @staticmethod
+    def auth_page(appid, redirect_uri,
+                  scope='snsapi_userinfo', state=''):
+        return Weixin.AUTH_URL.format(
+            appid=appid,
+            redirect_uri=urllib.quote_plus(redirect_uri),
+            scope=scope,
+            state=state
         )

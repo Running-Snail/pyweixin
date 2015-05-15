@@ -1,98 +1,67 @@
-import time
-import helper
-
-
 class Message(object):
+    MSG_TYPE_KEY = 'MsgType'
+    EVENT_KEY = 'Event'
+
     def __init__(self, data):
         super(Message, self).__init__()
-        self.to_user_name = data.get('ToUserName', '')
-        self.from_user_name = data.get('FromUserName', '')
-        self.msg_type = data.get('MsgType', '')
-        self.create_time = str(data.get('CreateTime', int(time.time())))
+        self.data = data
 
-    @staticmethod
-    def from_xml(xml_string):
-        return Message(helper.xml2dict(xml_string))
+    def __getitem__(self, key):
+        return self.data.get(key, '')
 
+    def __setitem__(self, key, value):
+        self.data[key] = value
 
-class Text(Message):
-    """docstring for Text"""
-    def __init__(self, data):
-        super(Text, self).__init__(data)
-        self.content = data.get('Content', '')
+    def is_type(self, type_name):
+        return self[Message.MSG_TYPE_KEY] == type_name
 
-    @staticmethod
-    def from_xml(xml_string):
-        return Text(helper.xml2dict(xml_string))
+    def is_event_type(self, event_type):
+        return self[Message.EVENT_KEY] == event_type
 
+    def is_event(self):
+        return self.is_type('event')
 
-class Image(Message):
-    """docstring for Image"""
-    def __init__(self, data):
-        super(Image, self).__init__(data)
-        self.picurl = data.get('PicUrl', '')
-        self.media_id = data.get('MediaId', '')
+    def is_text(self):
+        return self.is_type('text')
 
-    @staticmethod
-    def from_xml(xml_string):
-        return Image(helper.xml2dict(xml_string))
+    def is_image(self):
+        return self.is_type('image')
 
+    def is_voice(self):
+        return self.is_type('voice')
 
-class Voice(Message):
-    def __init__(self, data):
-        super(Voice, self).__init__(data)
-        self.format = data.get('Format', '')
-        self.media_id = data.get('MediaId', '')
-        self.recognition = data.get('Recognition', '')
+    def is_video(self):
+        return self.is_type('video')
 
-    @staticmethod
-    def from_xml(xml_string):
-        print helper.xml2dict(xml_string)
-        return Voice(helper.xml2dict(xml_string))
+    def is_short_video(self):
+        return self.is_type('shortvideo')
 
+    def is_location(self):
+        return self.is_type('location')
 
-class Video(Message):
-    def __init__(self, data):
-        super(Video, self).__init__(data)
-        self.thumb_media_id = data.get('ThumbMediaId', '')
-        self.media_id = data.get('MediaId', '')
+    def is_link(self):
+        return self.is_type('link')
 
-    @staticmethod
-    def from_xml(xml_string):
-        return Video(helper.xml2dict(xml_string))
+    def is_subscribe(self):
+        return self[Message.EVENT_KEY] == 'subscribe'
 
+    def is_unsubscribe(self):
+        return self[Message.EVENT_KEY] == 'unsubscribe'
 
-class ShortVideo(Message):
-    def __init__(self, data):
-        super(ShortVideo, self).__init__(data)
-        self.thumb_media_id = data.get('ThumbMediaId', '')
-        self.media_id = data.get('MediaId', '')
+    def is_qrcode(self, subscribe=True):
+        if subscribe:
+            return self[Message.EVENT_KEY] == 'SCAN'
+        return (self.is_event_type('subscribe') and
+                'Ticket' in self.data)
 
-    @staticmethod
-    def from_xml(xml_string):
-        return ShortVideo(helper.xml2dict(xml_string))
+    def is_location_event(self):
+        return self.is_event_type('LOCATION')
 
+    def is_click_event(self):
+        return self.is_event_type('CLICK')
 
-class Location(Message):
-    def __init__(self, data):
-        super(Location, self).__init__(data)
-        self.location_x = float(data.get('Location_X', 0))
-        self.location_y = float(data.get('Location_Y', 0))
-        self.scale = data.get('Scale', '')
-        self.label = data.get('Label', '')
+    def is_view_event(self):
+        return self.is_event_type('VIEW')
 
-    @staticmethod
-    def from_xml(xml_string):
-        return Location(helper.xml2dict(xml_string))
-
-
-class Link(Message):
-    def __init__(self, data):
-        super(Link, self).__init__(data)
-        self.title = data.get('Title', '')
-        self.description = data.get('Description', '')
-        self.url = data.get('Url', '')
-
-    @staticmethod
-    def from_xml(xml_string):
-        return Link(helper.xml2dict(xml_string))
+    def is_msg(self):
+        return not self.is_event()

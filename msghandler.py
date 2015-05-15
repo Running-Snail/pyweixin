@@ -7,3 +7,6 @@ class MsgHandler(object):
 
     def handle(self, msg):
         raise NotImplementedError()
+
+    def handle_not_match(self, msg):
+        raise NotImplementedError()
