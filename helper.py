@@ -24,3 +24,10 @@ def str_create_time(create_time=None):
     if create_time is None:
         create_time = int(time.time())
     return str(create_time)
+
+
+def handle_weixin_chinese(text):
+    if isinstance(text, unicode):
+        chr_list = list(text)
+        return ''.join([chr(ord(c)) for c in chr_list]).decode('utf-8')
+    return text.decode('utf-8')
