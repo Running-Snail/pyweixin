@@ -10,6 +10,11 @@ import urls
 import os
 
 
+class WeixinAuthError(Exception):
+    def __init__(self):
+        super(WeixinAuthError, self).__init__()
+
+
 class Weixin(object):
     """\
         Weixin api class
@@ -185,6 +190,16 @@ class Weixin(object):
                   scope='snsapi_userinfo', state=''):
         return Weixin.AUTH_URL.format(
             appid=appid,
+            redirect_uri=urllib.quote_plus(redirect_uri),
+            scope=scope,
+            state=state
+        )
+
+    def auth_redirect_url(
+            self, redirect_uri,
+            scope='snsapi_userinfo', state=''):
+        return Weixin.AUTH_URL.format(
+            appid=self.appid,
             redirect_uri=urllib.quote_plus(redirect_uri),
             scope=scope,
             state=state
