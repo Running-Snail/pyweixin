@@ -271,12 +271,12 @@ class Weixin(object):
             'timestamp': int(time.time()),
             'url': url
         }
-        pat = ('jsapi_ticket={jsapi_ticket}&'
-               'noncestr={noncestr}&'
-               'timestamp={timestamp}&'
-               'url={url}')
+        pat = (u'jsapi_ticket={jsapi_ticket}&'
+               u'noncestr={noncestr}&'
+               u'timestamp={timestamp}&'
+               u'url={url}')
         string1 = pat.format(**info)
-        print(string1)
+        print(string1.encode('utf-8'))
         sha1 = hashlib.sha1()
         sha1.update(string1)
         signature = sha1.hexdigest()
